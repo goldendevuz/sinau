@@ -2,21 +2,24 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import FileExtensionValidator
+from django.db.models import Q
+from django.contrib.auth import get_user_model
+
 from rest_framework.generics import get_object_or_404
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
-
-from apps.v1.shared.utility import check_username_phone_email, send_email, send_phone_code, check_user_type
-from .models import User, VIA_EMAIL, VIA_PHONE, NEW, CODE_VERIFIED, DONE, PHOTO_DONE
-from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, PermissionDenied, NotFound
 from icecream import ic
 
+from apps.v1.shared.utility import check_username, send_email, send_phone_code, check_user_type
+from .models import CODE_VERIFIED, DONE, PHOTO_DONE, VIA_EMAIL
+User = get_user_model()
+
 
 class SignUpSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=True)
-    username_phone_email = serializers.CharField(required=True, write_only=True)
+    username = serializers.CharField(required=True, write_only=True)
 
     class Meta:
         model = User
@@ -24,7 +27,7 @@ class SignUpSerializer(serializers.ModelSerializer):
             'id',
             'auth_type',
             'auth_status',
-            'username_phone_email',  # Include it in the serialized output
+            'username',  # Include it in the serialized output
         )
         extra_kwargs = {
             'auth_type': {'read_only': True, 'required': False},
@@ -56,8 +59,8 @@ class SignUpSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def auth_validate(data):
-        user_input = str(data.get('username_phone_email')).lower()
-        input_type = check_username_phone_email(user_input)
+        user_input = str(data.get('username')).lower()
+        input_type = check_username(user_input)
         if input_type not in ["email", "phone"]:
             raise ValidationError({
                 'message': "You must send a valid email or phone number"
@@ -67,7 +70,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         data['verify_value'] = user_input  # Save it for sending code, not for saving on the model
         return data
 
-    def validate_username_phone_email(self, value):
+    def validate_username(self, value):
         # return value.lower()
         value = value.lower()
         # ic(value)
@@ -86,7 +89,6 @@ class SignUpSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super(SignUpSerializer, self).to_representation(instance)
-        data["next_step"] = "Verify code sent to your email or phone"
         data.update(instance.token())
 
         return data
@@ -273,17 +275,17 @@ class LogoutSerializer(serializers.Serializer):
 
 
 class ResetPasswordSerializer(serializers.Serializer):
-    username_phone_email = serializers.CharField(write_only=True, required=True)
+    username = serializers.CharField(write_only=True, required=True)
 
     def validate(self, attrs):
-        username_phone_email = attrs.get('username_phone_email', None)
-        if username_phone_email is None:
+        username = attrs.get('username', None)
+        if username is None:
             raise ValidationError(
                 {
                     'message': "Email yoki telefon raqami kiritilishi shart!"
                 }
             )
-        user = User.objects.filter(Q(phone_number=username_phone_email) | Q(email=username_phone_email))
+        user = User.objects.filter(Q(phone_number=username) | Q(email=username))
         if not user.exists():
             raise NotFound(detail="User not found")
         attrs['user'] = user.first()

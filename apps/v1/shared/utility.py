@@ -18,15 +18,15 @@ username_regex = re.compile(r"^[a-zA-Z0-9_.-]+$")
 #     regex=r'^\+998\d{9}$',
 #     message="Telefon raqam quyidagi formatda bo'lishi kerak: '+998XXXXXXXXX' (masalan, +998901234567)."
 # )
-    # phone_number = phonenumbers.parse(username_phone_email)
+    # phone_number = phonenumbers.parse(username)
     # if phonenumbers.is_valid_number(phone_number):
-    #     username_phone_email = 'phone'
+    #     username = 'phone'
 
-def check_username_phone_email(username_phone_email):
-    # ic(username_phone_email)
-    if re.fullmatch(email_regex, username_phone_email):
+def check_username(username):
+    # ic(username)
+    if re.fullmatch(email_regex, username):
         return "email"
-    if re.fullmatch(phone_regex, username_phone_email):
+    if re.fullmatch(phone_regex, username):
         return "phone"
     data = {
         "message": "Email yoki telefon raqamingiz notogri"

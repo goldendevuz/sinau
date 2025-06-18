@@ -48,7 +48,7 @@ class UserAPITestCase(APITestCase):
     def signup(self, email=USERNAME_PHONE_EMAIL):
         """Helper to signup a user and return response + parsed object"""
         url = reverse('signup')
-        data = {"username_phone_email": email}
+        data = {"username": email}
         response = self.client.post(url, data)
         self.save_response_data(response)
         obj = SimpleNamespace(**response.data)

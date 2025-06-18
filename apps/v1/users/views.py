@@ -14,7 +14,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.decorators import api_view
 
 from apps.v1.shared.utils.response import success_response
-from apps.v1.shared.utility import send_email, check_username_phone_email, send_phone_code
+from apps.v1.shared.utility import send_email, check_username, send_phone_code
 from .serializers import SignUpSerializer, ChangeUserInformation, ChangeUserPhotoSerializer, LoginSerializer, \
     LoginRefreshSerializer, LogoutSerializer, ResetPasswordSerializer
 from .models import User, CODE_VERIFIED, NEW, VIA_EMAIL, VIA_PHONE, UserConfirmation
@@ -193,14 +193,14 @@ class ResetPasswordView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=self.request.data)
         serializer.is_valid(raise_exception=True)
-        username_phone_email = serializer.validated_data.get('username_phone_email')
+        username = serializer.validated_data.get('username')
         user = serializer.validated_data.get('user')
-        if check_username_phone_email(username_phone_email) == 'phone':
+        if check_username(username) == 'phone':
             code = user.create_verify_code(VIA_PHONE)
-            send_email(username_phone_email, code)
-        elif check_username_phone_email(username_phone_email) == 'email':
+            send_email(username, code)
+        elif check_username(username) == 'email':
             code = user.create_verify_code(VIA_EMAIL)
-            send_email(username_phone_email, code)
+            send_email(username, code)
 
         return Response(
             {

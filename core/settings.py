@@ -31,8 +31,7 @@ INSTALLED_APPS = [
 ]
 
 THIRD_APPS = {
-    # 'drf_material',
-    "rest_wind",
+    'drf_material',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
@@ -47,8 +46,9 @@ THIRD_APPS = {
 }
 
 LOCAL_APPS = [
-    'apps.v1.users',
     'apps.v1.shared',
+    'apps.v1.users',
+    'apps.v1.main',
 ]
 
 INSTALLED_APPS += THIRD_APPS
@@ -218,11 +218,6 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
 }
-
-# Use compressed static files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-APPEND_SLASH=True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
