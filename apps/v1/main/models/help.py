@@ -1,5 +1,5 @@
 from django.db import models
-from apps.v1.shared import BaseModel
+from apps.v1.shared.models import BaseModel
 from .faq import FAQ
 from .terms_and_conditions import TermsAndConditions
 from .privacy_policy import PrivacyPolicy

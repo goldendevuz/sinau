@@ -1,7 +1,7 @@
 from django.db import models
-from apps.v1.shared import BaseModel
+from apps.v1.shared.models import BaseModel
 from django.contrib.auth import get_user_model
-from apps.v1.courses.models import Course  # Adjust import as needed
+from .course import Course  # Adjust import as needed
 
 User = get_user_model()
 

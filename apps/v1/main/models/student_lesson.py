@@ -1,7 +1,7 @@
 from django.db import models
-from apps.v1.shared import BaseModel
-from apps.v1.users.models import Student  # adjust as needed
-from apps.v1.courses.models import Course  # adjust as needed
+from apps.v1.shared.models import BaseModel
+from .student import Student  # adjust as needed
+from .course import Course  # adjust as needed
 
 class StudentLesson(BaseModel):
     STATUS_NEW = 'new'

@@ -1,7 +1,7 @@
 from django.db import models
-from apps.v1.shared import BaseModel
-from apps.v1.users.models import Student  # adjust import as needed
-from apps.v1.courses.models import Course  # adjust import as needed
+from apps.v1.shared.models import BaseModel
+from .student import Student  # adjust import as needed
+from .course import Course  # adjust import as needed
 
 class Feedback(BaseModel):
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='feedbacks')

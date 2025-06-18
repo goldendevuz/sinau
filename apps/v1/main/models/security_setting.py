@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from apps.v1.shared import BaseModel
+from apps.v1.shared.models import BaseModel
 
 User = get_user_model()
 

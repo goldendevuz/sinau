@@ -1,6 +1,6 @@
 from django.db import models
-from apps.v1.shared import BaseModel
-from apps.v1.courses.models import Course  # adjust import as needed
+from apps.v1.shared.models import BaseModel
+from .course import Course  # adjust import as needed
 
 class Lesson(BaseModel):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons')

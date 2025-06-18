@@ -1,5 +1,5 @@
 from django.db import models
-from apps.v1.shared import BaseModel
+from apps.v1.shared.models import BaseModel
 
 class FAQ(BaseModel):
     CATEGORY_CHOICES = [

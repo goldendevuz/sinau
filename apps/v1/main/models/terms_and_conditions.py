@@ -1,5 +1,5 @@
 from django.db import models
-from apps.v1.shared import BaseModel
+from apps.v1.shared.models import BaseModel
 
 class TermsAndConditions(BaseModel):
     title = models.CharField(max_length=255, unique=True)

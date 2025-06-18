@@ -1,5 +1,5 @@
 from django.db import models
-from apps.v1.shared import BaseModel
+from apps.v1.shared.models import BaseModel
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
